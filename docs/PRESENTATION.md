@@ -1,43 +1,9 @@
----
-marp: true
-theme: default
-paginate: true
-backgroundColor: #ffffff
-color: #1e293b
-style: |
-  section {
-    font-family: 'Inter', 'Segoe UI', sans-serif;
-    font-size: 24px;
-    padding: 40px;
-  }
-  h1 {
-    color: #4f46e5;
-    font-size: 60px;
-  }
-  h2 {
-    color: #64748b;
-    font-size: 36px;
-  }
-  code {
-    background: #f1f5f9;
-    color: #ef4444;
-    padding: 2px 6px;
-    border-radius: 4px;
-  }
-  pre {
-    background: #1e293b;
-    color: #f8fafc;
-    border-radius: 8px;
-    padding: 20px;
-    font-size: 18px;
-  }
----
 
 <!-- _class: lead -->
 # TypeSprint ⚡
 ## The Classic Typing Test, Reimagined with AI
 
-**Technical Implementation Review**
+
 React | Vite | Google Gemini | Styled Components
 
 ---
