@@ -175,6 +175,14 @@ We implemented HOCs for **Security and Validation**:
     *   *Role*: Prevents users from manually typing `/result` without taking a test.
     *   *Action*: Redirects to `/` if no score data exists in context.
 
+3.  **`withErrorBoundary`**: wraps logic containers (like `TestContainer`).
+    *   *Role*: Catches React render errors (e.g., API failures).
+    *   *Action*: Displays a glassmorphic fallback UI instead of a whitespace crash.
+
+4.  **`withLoading`**: wraps view components.
+    *   *Role*: Standardizes loading states (e.g., waiting for AI).
+    *   *UI*: Renders a CSS animation spinner while `isLoading` is true.
+
 ---
 
 # 7. Styled Components
