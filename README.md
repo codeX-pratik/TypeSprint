@@ -147,7 +147,3 @@ TypeSprint/
 *   **"Blank Screen"**: Check the browser console (F12). If you see 404s for imports, try deleting `node_modules` and running `npm install` again.
 
 ---
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
