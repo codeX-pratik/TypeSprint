@@ -106,10 +106,7 @@ TypeSprint/
 
 3.  **Configure API Key**
     *   Get your free API key from [Google AI Studio](https://aistudio.google.com/).
-    *   Create a `.env` file in the root directory (copy from `.env.example`).
-    ```bash
-    cp .env.example .env
-    ```
+    *   Create a `.env` file in the root directory.
     *   Add your key:
     ```env
     VITE_GEMINI_API_KEY=your_actual_api_key_here
