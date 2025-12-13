@@ -6,7 +6,7 @@ TypeSprint is a modern, high-performance typing application built to help develo
 
 Built with **React** and **Vite**, TypeSprint features a stunning **Glassmorphic UI**, a fully responsive design, and a privacy-focused **Local-First** architecture.
 
-![TypeSprint Banner](https://via.placeholder.com/1200x600?text=TypeSprint+Preview) <!-- Replace with actual screenshot path -->
+
 
 ---
 
