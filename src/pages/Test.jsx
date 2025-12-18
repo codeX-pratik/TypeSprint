@@ -1,130 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useResult } from '../context/ResultContext';
 import useTimer from '../hooks/useTimer';
-import withConfigCheck from '../hoc/withConfigCheck';
-import withErrorBoundary from '../hoc/withErrorBoundary';
-import withLoading from '../hoc/withLoading';
+import withConfigCheck from '../hoc/withConfigCheck.jsx';
+import withErrorBoundary from '../hoc/withErrorBoundary.jsx';
+import withLoading from '../hoc/withLoading.jsx';
 import { getParagraph, calculateWPM, calculateAccuracy, formatTime } from '../utils/helpers';
 import { generateParagraphWithAI } from '../utils/gemini';
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 900px;
-  width: 100%;
-  flex: 1;
-  margin: 0 auto;
-  padding: 1rem;
-  gap: 1.5rem;
-  
-  @media (min-width: 768px) {
-    padding: 2rem;
-    gap: 2rem;
-    justify-content: center;
-  }
-`;
-
-const StatsBar = styled.div`
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-  padding: 1rem;
-  background: ${({ theme }) => theme.card};
-  border-bottom: 2px solid ${({ theme }) => theme.border};
-  border-radius: 16px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1rem; 
-  color: ${({ theme }) => theme.primary};
-  transition: all 0.3s ease;
-  
-  @media (min-width: 768px) {
-      padding: 1.25rem 3rem;
-  }
-`;
-
-const StatItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.2rem;
-
-  span:first-child {
-    font-size: 0.7rem;
-    color: ${({ theme }) => theme.textSecondary};
-    text-transform: uppercase;
-  }
-  
-  @media (min-width: 768px) {
-      span:first-child {
-          font-size: 0.8rem;
-      }
-  }
-`;
-
-const TypingArea = styled.div`
-  position: relative;
-  width: 100%;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  background: ${({ theme }) => theme.background};
-  padding: 1rem;
-  border-radius: 8px;
-  min-height: 15rem;
-  cursor: text;
-  word-spacing: 0.2rem;
-  user-select: none;
-  overflow-y: auto;
-  max-height: 60vh;
-  border: 1px solid transparent; 
-  transition: all 0.3s ease;
-  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
-  
-  &:focus-within {
-      outline: none;
-      box-shadow: 0 0 0 3px ${({ theme }) => theme.primary}40, inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
-      border-color: ${({ theme }) => theme.primary};
-  }
-
-  @media (min-width: 768px) {
-    font-size: 1.8rem;
-    padding: 2rem;
-    line-height: 1.8;
-  }
-`;
-
-const HiddenInput = styled.input`
-  position: absolute;
-  opacity: 0;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  cursor: default;
-`;
-
-const Char = styled.span`
-  color: ${({ status, theme }) => {
-    if (status === 'correct') return theme.accent;
-    if (status === 'incorrect') return theme.error;
-    return theme.textSecondary;
-  }};
-  background: ${({ status, theme }) => status === 'incorrect' ? theme.error + '20' : 'transparent'};
-  border-radius: 2px;
-  
-  &.current {
-    border-left: 2px solid ${({ theme }) => theme.primary};
-    animation: blink 1s infinite;
-  }
-  
-  @keyframes blink {
-    0%, 100% { border-color: transparent }
-    50% { border-color: ${({ theme }) => theme.primary} }
-  }
-`;
 
 // -- PRESENTATIONAL COMPONENT --
 const TestView = ({ 
@@ -140,23 +22,23 @@ const TestView = ({
     isThinking 
 }) => {
     return (
-        <Container onClick={handleClick}>
-            <StatsBar>
-                <StatItem>
+        <div className="test-container" onClick={handleClick}>
+            <div className="stats-bar">
+                <div className="stat-item">
                     <span>Time</span>
                     {formatTime(time)}
-                </StatItem>
-                <StatItem>
+                </div>
+                <div className="stat-item">
                     <span>WPM</span>
                     {currentWPM}
-                </StatItem>
-                <StatItem>
+                </div>
+                <div className="stat-item">
                     <span>Accuracy</span>
                     {currentAccuracy}%
-                </StatItem>
-            </StatsBar>
+                </div>
+            </div>
 
-            <TypingArea onClick={handleClick}>
+            <div className="typing-area" onClick={handleClick}>
                 {paragraph.split('').map((char, index) => {
                     let status = 'untyped';
                     if (index < typed.length) {
@@ -164,12 +46,13 @@ const TestView = ({
                     }
                     const isCurrent = index === typed.length;
                     return (
-                        <Char key={index} status={status} className={isCurrent ? 'current' : ''}>
+                        <span key={index} className={`char ${status} ${isCurrent ? 'current' : ''}`}>
                             {char}
-                        </Char>
+                        </span>
                     );
                 })}
-                <HiddenInput 
+                <input 
+                    className="hidden-input"
                     ref={inputRef}
                     type="text"
                     onChange={handleInput}
@@ -181,12 +64,12 @@ const TestView = ({
                     onPaste={(e) => e.preventDefault()}
                     disabled={isThinking}
                 />
-            </TypingArea>
+            </div>
 
             <p style={{color: '#6c757d', fontSize: '0.9rem'}}>
                 Click text to focus • Press ESC to reset (refresh)
             </p>
-        </Container>
+        </div>
     );
 };
 
@@ -204,7 +87,7 @@ const TestContainer = () => {
     const [isThinking, setIsThinking] = useState(true);
 
     const isPractice = testConfig.mode === 'practice';
-    const { time, isRunning, isFinished, start, pause, reset } = useTimer(
+    const { time, isRunning, isFinished, start, reset } = useTimer(
         isPractice ? 0 : testConfig.duration, 
         !isPractice
     );
@@ -242,26 +125,22 @@ const TestContainer = () => {
         initTest();
     }, [testConfig, reset, isPractice]);
 
-    // Handle Time Finish
-    useEffect(() => {
-        if (isFinished && !isPractice) {
-            finishTest();
-        }
-    }, [isFinished, isPractice]);
-
-    const finishTest = useCallback(() => {
+    const finishTest = useCallback((finalTyped = typed) => {
         let timeTaken = isPractice ? time : (testConfig.duration - time);
         if (timeTaken === 0) timeTaken = 1;
 
-        const correctChars = typed.split('').filter((char, i) => char === paragraph[i]).length;
+        // Use finalTyped if provided (for last char update), else state typed
+        const textToAnalyze = finalTyped || typed;
+
+        const correctChars = textToAnalyze.split('').filter((char, i) => char === paragraph[i]).length;
         const wpm = calculateWPM(correctChars, timeTaken);
-        const accuracy = calculateAccuracy(typed.length, mistakes);
+        const accuracy = calculateAccuracy(textToAnalyze.length, mistakes);
 
         setResult({
             wpm,
             accuracy,
             mistakes,
-            totalChars: typed.length,
+            totalChars: textToAnalyze.length,
             timeTaken,
             date: new Date().toISOString(),
             mode: testConfig.mode
@@ -269,6 +148,13 @@ const TestContainer = () => {
         
         navigate('/result');
     }, [typed, mistakes, time, testConfig, isPractice, setResult, navigate, paragraph]);
+
+    // Handle Time Finish
+    useEffect(() => {
+        if (isFinished && !isPractice) {
+            finishTest();
+        }
+    }, [isFinished, isPractice, finishTest]);
 
     const handleInput = (e) => {
         const value = e.target.value;
@@ -291,12 +177,13 @@ const TestContainer = () => {
         setTyped(value);
 
         if (value.length >= paragraph.length) {
-            setTyped(value.slice(0, paragraph.length));
-            finishTest();
+            const finalValue = value.slice(0, paragraph.length);
+            setTyped(finalValue);
+            finishTest(finalValue);
         }
     };
 
-    const handleKeyDown = (e) => {};
+    const handleKeyDown = () => {};
 
     const handleClick = () => {
         if(inputRef.current) inputRef.current.focus();
@@ -324,5 +211,7 @@ const TestContainer = () => {
     );
 };
 
-// Wrap with Configuration Check AND Error Boundary
-export default withConfigCheck(withErrorBoundary(TestContainer));
+// Wrap with Error Boundary (Outer) AND Configuration Check (Inner)
+const TestPage = withErrorBoundary(withConfigCheck(TestContainer));
+
+export default TestPage;

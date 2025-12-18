@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useResult } from '../context/ResultContext';
 
+// eslint-disable-next-line no-unused-vars
 const withConfigCheck = (WrappedComponent) => {
-  return (props) => {
+  return function WithConfigCheck(props) {
     const { testConfig } = useResult();
     const navigate = useNavigate();
 

@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import words from './words.json';
+
 
 // Initialize Gemini API
 // Note: In a real production app, this should be backend-proxied or strictly env-gated.
@@ -22,7 +22,7 @@ export const generateParagraphWithAI = async (difficulty = 'medium') => {
     }
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
         
         let prompt = "";
         switch (difficulty) {
@@ -50,7 +50,11 @@ export const generateParagraphWithAI = async (difficulty = 'medium') => {
         
         return text;
     } catch (error) {
-        console.error("Gemini Generation Error:", error);
+        if (error.message.includes('429') || error.status === 429) {
+            console.warn("Gemini Rate Limit Exceeded. Falling back to offline mode.");
+        } else {
+            console.error("Gemini Generation Error:", error);
+        }
         return null;
     }
 };

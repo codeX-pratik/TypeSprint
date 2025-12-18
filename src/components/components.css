@@ -1,0 +1,192 @@
+/* NavBar Styles */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 5%;
+  background: var(--card); /* Fallback or handle opacity in color var? Using simple var for now */
+  /* To handle opacity with var, we might need rgb vars, but let's try direct var first or calc if possible. 
+     The original used theme.card + 'cc'. 
+     Let's rely on solid or transparent colors for now, or define rgba vars. 
+     For now, we will use a semi-transparent background if the var is hex, we can't easily alpha it without color-mix support or splitting vars. 
+     Let's use color-mix for modern browsers or just opaque for simplicity. */
+  background: color-mix(in srgb, var(--card), transparent 20%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -1px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 1001;
+  text-decoration: none;
+}
+
+.logo:hover {
+  color: var(--primaryHover);
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.nav-link {
+  font-weight: 500;
+  color: var(--textSecondary);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  position: relative;
+}
+
+.nav-link.active {
+  color: var(--primary);
+}
+
+.nav-link:hover {
+  color: var(--primary);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: var(--primary);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.toggle-button {
+  background: color-mix(in srgb, var(--secondary), transparent 60%);
+  border: 1px solid transparent;
+  color: var(--text);
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 1.2rem;
+}
+
+.toggle-button:hover {
+  background: var(--secondary);
+  transform: rotate(15deg);
+}
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  z-index: 1001;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card);
+    padding: 2rem;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-link:hover {
+    background: color-mix(in srgb, var(--primary), transparent 90%);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    margin: -0.5rem -1rem; 
+  }
+  
+  .hamburger {
+    display: block;
+  }
+}
+
+
+/* Footer Styles */
+.footer {
+  width: 100%;
+  padding: 1.5rem;
+  text-align: center;
+  margin-top: auto;
+  color: var(--textSecondary);
+  font-size: 0.9rem;
+  border-top: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card), transparent 50%);
+  backdrop-filter: blur(5px);
+}
+
+/* Reusing generic styles from previous components.css */
+a {
+  font-weight: 500;
+  color: var(--primary); /* Updated to use var */
+  text-decoration: inherit;
+}
+a:hover {
+  color: var(--primaryHover); /* Updated to use var */
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+  color: var(--text); /* Added */
+}
+
+button.base-btn { /* Renamed generic button to base-btn or keep generic? Let's check usages */
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a; /* fallback */
+  background-color: var(--secondary); /* var */
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button.base-btn:hover {
+  border-color: var(--primary);
+}
+button.base-btn:focus,
+button.base-btn:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  /* Removed media query as we are using data-theme now, 
+     but kept for fallback if needed or just remove, 
+     since we rely on ThemeContext setting vars.
+     Removing generic media query overrides. */
+}

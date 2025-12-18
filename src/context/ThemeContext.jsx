@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { ThemeProvider as StyledThemeProvider } from 'styled-components';
+/* eslint-disable react-refresh/only-export-components */
+import React, { createContext, useContext, useEffect } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
 
 const ThemeContext = createContext();
@@ -35,23 +35,22 @@ const darkTheme = {
 
 export const ThemeProvider = ({ children }) => {
     const [themeMode, setThemeMode] = useLocalStorage('theme', 'dark'); // Default to dark for "pro" feel
-    const [mounted, setMounted] = useState(false);
-
+    
     const toggleTheme = () => {
         setThemeMode(prev => prev === 'light' ? 'dark' : 'light');
     };
 
     useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    const theme = themeMode === 'light' ? lightTheme : darkTheme;
+        const theme = themeMode === 'light' ? lightTheme : darkTheme;
+        Object.keys(theme).forEach(key => {
+            document.documentElement.style.setProperty(`--${key}`, theme[key]);
+        });
+        document.body.dataset.theme = themeMode; 
+    }, [themeMode]);
 
     return (
         <ThemeContext.Provider value={{ themeMode, toggleTheme }}>
-            <StyledThemeProvider theme={theme}>
-                {children}
-            </StyledThemeProvider>
+            {children}
         </ThemeContext.Provider>
     );
 };

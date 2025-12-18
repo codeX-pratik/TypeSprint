@@ -19,6 +19,7 @@ export const ResultProvider = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useResult = () => {
     const context = useContext(ResultContext);
     if (!context) {
