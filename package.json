@@ -4,6 +4,7 @@
   "description": "Root for TypeSprint Client & Server",
   "scripts": {
     "install:all": "cd client && npm install && cd ../server && npm install",
+    "build": "cd client && npm install && npm run build",
     "start": "concurrently \"npm run start:client\" \"npm run start:server\"",
     "start:client": "cd client && npm run dev",
     "start:server": "cd server && npm run dev"
