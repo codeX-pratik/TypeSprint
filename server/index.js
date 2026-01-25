@@ -23,8 +23,6 @@ const connectDB = async () => {
         console.log('✅ MongoDB Connected Successfully');
     } catch (err) {
         console.error('❌ MongoDB Connection Error:', err.message);
-        // Throw error so it can be caught by routes
-        throw new Error(`DB Config Error: ${err.message}`);
     }
 };
 
@@ -37,13 +35,7 @@ mongoose.connection.on('error', err => {
 
 // Routes
 app.get('/api/health', (req, res) => {
-    res.json({ 
-        status: 'ok', 
-        msg: 'Server is running',
-        dbState: mongoose.connection.readyState, // 0: disconnected, 1: connected, 2: connecting, 3: disconnecting
-        dbName: mongoose.connection.name,
-        env: process.env.NODE_ENV
-    });
+    res.json({ status: 'ok', msg: 'Server is running' });
 });
 
 // Save Score

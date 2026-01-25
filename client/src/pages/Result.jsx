@@ -45,10 +45,8 @@ const Result = () => {
                     if (!res.ok) {
                         throw new Error(data.error || 'Server returned error');
                     }
-                    console.log('Score saved:', data);
                 }).catch(err => {
                     console.error('Error saving score:', err);
-                    alert(`⚠️ Error saving score: ${err.message}\nPlease check your internet or Vercel Database config.`);
                 });
             }
         }
