@@ -1,12 +1,10 @@
 # TypeSprint ⚡
 
-> **The Ultimate AI-Powered Typing Speed Trainer**
+> **The Ultimate AI-Powered Full-Stack Typing Speed Trainer**
 
-TypeSprint is a modern, high-performance typing application built to help developers and enthusiasts master their keyboarding skills. Unlike traditional typing tests that use static word lists, TypeSprint leverages **Google Gemini AI** to generate unique, context-aware paragraphs for every single session.
+TypeSprint is a modern, high-performance typing application built to help developers and enthusiasts master their keyboarding skills. Unlike traditional typing tests, TypeSprint leverages **Google Gemini AI** for dynamic content and a **MERN Stack** (MongoDB, Express, React, Node.js) for robust performance and global competition.
 
-Built with **React** and **Vite**, TypeSprint features a stunning **Glassmorphic UI**, a fully responsive design, and a privacy-focused **Local-First** architecture.
-
-
+Built with **React** and **Vite**, featuring a **Glassmorphic UI**, and now powered by a **Node.js/Express Backend** with **MongoDB** for a persistent global leaderboard.
 
 ---
 
@@ -15,40 +13,54 @@ Built with **React** and **Vite**, TypeSprint features a stunning **Glassmorphic
 ### 🤖 AI-Powered Content Engine
 *   **Never Boring**: Say goodbye to repetitive "The quick brown fox" tests.
 *   **Adaptive Content**: Generating content dynamically based on your chosen difficulty.
-    *   **Easy**: Simple sentences, common vocabulary, no complex punctuation.
-    *   **Medium**: Standard prose, engaging topics, average sentence length.
-    *   **Hard**: Complex scientific/technical vocabulary, advanced punctuation, and longer sentences.
-*   **Powered by Gemini**: Directly integrated with Google's Gemini 1.5 Flash model for lightning-fast generation.
+    *   **Easy**: Simple sentences, common vocabulary.
+    *   **Medium**: Standard prose, engaging topics.
+    *   **Hard**: Scientific terms, advanced punctuation, and complex sentence structures.
+*   **Powered by Gemini**: Directly integrated with Google's Gemini 1.5 Flash model.
+
+### 🏆 Global Leaderboard & Persistence
+*   **Global Competition**: Compete with typists around the world. Your scores are saved to a central **MongoDB** database.
+*   **Persistent Profiles**: Enter your name once, and track your high scores across sessions.
+*   **Pagination**: Browse through thousands of scores easily with our paginated leaderboard view (5 scores per page).
+*   **Live Rankings**: View the top scores filtered by difficulty.
 
 ### 🎨 Premium User Experience
-*   **Glassmorphism**: A modern, translucent design aesthetic with background blurs and subtle gradients.
-*   **Dark Mode Native**: Designed from the ground up for eye comfort during long coding sessions.
-*   **Visual Feedback**:
-    *   **Live Error Highlighting**: Incorrect characters turn red instantly.
-    *   **Caret Animation**: Smooth, calculated caret movement.
-    *   **Pulse Effects**: Subtle animations on buttons and interactions.
+*   **Glassmorphism**: A modern, translucent design aesthetic.
+*   **Dark Mode Native**: Designed for eye comfort during long coding sessions.
+*   **Visual Feedback**: Live error highlighting, smooth caret animation, and pulse effects.
 
 ### ⚙️ Advanced Configuration
-*   **Custom Duration**: Choose standard presets (60s, 90s, 120s) or input **any** custom time (e.g., 45s, 300s).
-*   **Smart Defaults**: The app intelligently suggests time limits based on the difficulty you select (e.g., automatically suggesting 120s for Hard mode).
-*   **Practice Mode**: A stress-free environment with no timer, allowing you to focus purely on accuracy.
+*   **Custom Duration**: Choose standard presets (60s, 90s, 120s) or input any time.
+*   **Smart Defaults**: Intelligently suggests time limits based on difficulty.
+*   **Practice Mode**: A stress-free environment with no timer.
 
 ### 📊 Comprehensive Analytics
-*   **Real-Time WPM**: See your Words Per Minute update as you type.
-*   **Accuracy Tracking**: Precise percentage tracking of your hit rate.
-*   **Mistake Breakdown**: See exactly how many characters you missed.
-*   **Personal History**: Your best runs are saved locally to your browser's LocalStorage. View your improvement over time on the Leaderboard.
+*   **Real-Time WPM & Accuracy**: See your updates as you type.
+*   **Mistake Breakdown**: Detailed error metrics.
+*   **History**: Analyze your performance trends over time.
 
 ---
 
 ## 🛠️ Technology Stack
 
-*   **Core**: [React 18](https://react.dev/)
-*   **Build Tool**: [Vite](https://vitejs.dev/) (Super fast HMR)
-*   **Styling**: [Styled Components](https://styled-components.com/) (CSS-in-JS)
-*   **Routing**: [React Router v6](https://reactrouter.com/)
-*   **AI**: [Google Generative AI SDK](https://www.npmjs.com/package/@google/generative-ai)
-*   **State Management**: React Context API + Custom Hooks (`useLocalStorage`, `useTimer`)
+This project is a **MERN Stack** application:
+
+*   **Frontend**:
+    *   [React 18](https://react.dev/)
+    *   [Vite](https://vitejs.dev/) (Build Tool)
+    *   [Styled Components](https://styled-components.com/) (CSS-in-JS)
+    *   [React Router v6](https://reactrouter.com/)
+    *   [Google Generative AI SDK](https://www.npmjs.com/package/@google/generative-ai)
+
+*   **Backend**:
+    *   [Node.js](https://nodejs.org/) (Runtime)
+    *   [Express](https://expressjs.com/) (API Framework)
+    *   [MongoDB](https://www.mongodb.com/) (Database)
+    *   [Mongoose](https://mongoosejs.com/) (ODM)
+
+*   **Deployment**:
+    *   **Vercel** (Serverless Function + Static Hosting)
+    *   [Read the Deployment Guide](docs/DEPLOYMENT_GUIDE.md)
 
 ---
 
@@ -56,29 +68,18 @@ Built with **React** and **Vite**, TypeSprint features a stunning **Glassmorphic
 
 ```bash
 TypeSprint/
-├── src/
-│   ├── components/       # Reusable UI components
-│   │   ├── Footer.jsx    # Sticky footer
-│   │   ├── NavBar.jsx    # Responsive navigation
-│   │   └── ...
-│   ├── context/          # Global State
-│   │   ├── ResultContext # Test results & configuration
-│   │   └── ThemeContext  # Theme management
-│   ├── hooks/            # Custom React Hooks
-│   │   ├── useTimer.js   # Countdown logic
-│   │   └── useLocalStorage # Persistence logic
-│   ├── pages/            # Main Route Views
-│   │   ├── Home.jsx      # Landing Page
-│   │   ├── Setup.jsx     # Configuration Dashboard
-│   │   ├── Test.jsx      # Core Typing Interface
-│   │   ├── Result.jsx    # Analysis Report
-│   │   └── Leaderboard   # History View
-│   ├── utils/            # Helper Functions
-│   │   └── gemini.js     # AI API Integration
-│   ├── App.jsx           # Main Layout & Routing
-│   └── main.jsx          # Entry Point
-├── .env                  # Environment Variables
-└── package.json
+├── api/                  # Vercel Serverless Adapter
+├── client/               # Frontend (React + Vite)
+│   ├── src/
+│   │   ├── components/   # Reusable UI (NavBar, Footer)
+│   │   ├── context/      # Global State (ResultContext)
+│   │   ├── pages/        # Views (Home, Setup, Test, Result, Leaderboard)
+│   │   └── utils/        # Helpers (Gemini API)
+├── server/               # Backend (Node + Express)
+│   ├── models/           # Mongoose Schemas (Score.js)
+│   └── index.js          # Express Server Entry Point
+├── docs/                 # Documentation & Reports
+└── vercel.json           # Vercel Deployment Config
 ```
 
 ---
@@ -86,8 +87,8 @@ TypeSprint/
 ## 🚀 Getting Started
 
 ### Prerequisites
-*   Node.js (v18 or higher)
-*   npm or yarn
+*   Node.js (v18+)
+*   MongoDB (Local running instance OR MongoDB Atlas URI)
 
 ### Installation
 
@@ -97,50 +98,57 @@ TypeSprint/
     cd TypeSprint
     ```
 
-2.  **Install Dependencies**
+2.  **Install All Dependencies**
+    We have a helper script to install dependencies for both Client and Server.
     ```bash
-    npm install
-    # or
-    yarn install
+    npm run install:all
     ```
 
-3.  **Configure API Key**
-    *   Get your free API key from [Google AI Studio](https://aistudio.google.com/).
-    *   Create a `.env` file in the root directory.
-    *   Add your key:
-    ```env
-    VITE_GEMINI_API_KEY=your_actual_api_key_here
-    ```
+3.  **Environment Setup**
+    *   **Client**: Create `client/.env`
+        ```env
+        VITE_GEMINI_API_KEY=your_gemini_api_key
+        ```
+    *   **Server**: Create `server/.env`
+        ```env
+        PORT=3000
+        MONGODB_URI=mongodb://localhost:27017/typesprint  # OR your Atlas URI
+        ```
 
-4.  **Run Locally**
+4.  **Run the App**
+    Start both the backend and frontend simultaneously:
     ```bash
-    npm run dev
+    npm start
     ```
-    Open `http://localhost:5173` in your browser.
+    *   Frontend: `http://localhost:5173`
+    *   Backend: `http://localhost:3000`
 
 ---
 
 ## 🎮 Usage Guide
 
-1.  **Landing**: Click **"Get Started"** to enter the app.
-2.  **Setup**:
-    *   **Left Panel**: Read the "How to Play" guide.
-    *   **Right Panel**: Select your **Time**, **Difficulty**, and **Mode**.
-    *   *Tip*: Toggle "Practice" mode to disable the timer.
-3.  **Test**:
-    *   Type the text shown.
-    *   **Green**: Correct.
-    *   **Red**: Incorrect.
-    *   **Gray**: Pending.
-    *   *Note*: You cannot backspace beyond the current word boundaries in some modes (mimicking strict typing tests).
-4.  **Results**: View your detailed scorecard.
-5.  **Leaderboard**: Check your past top scores. Click **"Clear History"** to reset your data.
+1.  **Setup**: Enter your **Name**, select **Difficulty** and **Time**.
+2.  **Test**: Type the AI-generated text.
+3.  **Submit**: Upon completion, your score is **automatically submitted** to the global leaderboard.
+4.  **Compete**: Check the Leaderboard page to see where you rank!
 
 ---
 
 ## 🐛 Troubleshooting
 
-*   **"Gemini API Key missing"**: Ensure you created the `.env` file and restarted the server (`npm run dev`) after adding the key.
-*   **"Blank Screen"**: Check the browser console (F12). If you see 404s for imports, try deleting `node_modules` and running `npm install` again.
+*   **"MongoDB Connection Error"**: Ensure MongoDB is running locally or your `.env` string is correct.
+*   **"Network Error on Submit"**: Make sure the backend server (port 3000) is running via `npm start`.
+
+---
+
+## 🔮 Future Scope & Roadmap
+
+While TypeSprint is currently a feature-complete application, we have an exciting roadmap for future development:
+
+1.  **Multiplayer Mode**: Real-time 1v1 racing against friends using **WebSockets (Socket.io)**.
+2.  **User Authentication**: Robust account system using **JWT/Auth0** to save history across devices.
+3.  **Custom Text Upload**: Allowing users to paste their own articles or code snippets to practice.
+4.  **Advanced Analytics**: Heatmaps of keyboard usage and specific key weakness analysis.
+5.  **Voice Mode**: Dictation typing tests for accessibility and variety.
 
 ---

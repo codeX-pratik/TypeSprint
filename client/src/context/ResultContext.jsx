@@ -12,8 +12,10 @@ export const ResultProvider = ({ children }) => {
       mode: 'test' // 'test' | 'practice'
   });
 
+  const [userName, setUserName] = useState('');
+
   return (
-    <ResultContext.Provider value={{ result, setResult, testConfig, setTestConfig }}>
+    <ResultContext.Provider value={{ result, setResult, testConfig, setTestConfig, userName, setUserName }}>
       {children}
     </ResultContext.Provider>
   );

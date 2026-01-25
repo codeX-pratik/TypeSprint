@@ -3,50 +3,91 @@
 # TypeSprint ⚡
 ## The Classic Typing Test, Reimagined with AI
 
-
-React | Vite | Google Gemini | Styled Components
+MERN Stack (MongoDB, Express, React, Node) | Google Gemini | Styled Components
 
 ---
 
 # 🎯 Project Objective
 
-To build a modern, high-performance typing speed trainer that solves the problem of repetitive content in traditional typing tests.
+To build a modern, high-performance, **Full-Stack** typing speed trainer that solves the problem of repetitive content and lack of global competition.
 
 **Key Goals:**
 1.  **Dynamic Content**: Eliminate static word lists using Generative AI.
-2.  **Visual Excellence**: Implement a "Glassmorphic" UI for a premium feel.
-3.  **Local Persistence**: Track user progress without requiring a database Login.
+2.  **Global Leaderboard**: Persistent high scores using a dedicated Backend API.
+3.  **Visual Excellence**: Implement a "Glassmorphic" UI for a premium feel.
 4.  **Responsiveness**: Ensure a seamless experience across Mobile and Desktop.
 
 ---
 
 # 🏗️ Architecture Overview
 
-The application follows a standard **Single Page Application (SPA)** architecture powered by Vite.
+The application follows a **Client-Server Architecture** deployed as a Monorepo.
 
 ```mermaid
 graph TD
-    User[User Interaction] --> Router[React Router]
-    Router --> Landing[Landing Page]
-    Router --> Setup[Setup Page]
-    Router --> Test[Test Interface]
+    User[User Interaction] --> Client[React Client]
+    Client --> Local[Local Logic & State]
+    Client --> API[Backend API]
     
-    Setup --> Context[ResultContext]
-    Test --> CustomHooks[useTimer / useWords]
-    Test --> Gemini[Gemini AI_API]
+    subgraph Frontend_Client
+        Local --> Gemini[Gemini AI SDK]
+        Local --> Hooks[Custom Hooks]
+    end
     
-    Test --> Results[Result Page]
-    Results --> LocalStorage[Browser Storage]
+    subgraph Backend_Server
+        API --> Express[Express Server]
+        Express --> Mongoose[Mongoose ODM]
+        Mongoose --> MongoDB[(MongoDB Atlas)]
+    end
 ```
+
 
 ---
 
-# 1. React Components
+# 📂 Key Files & Responsibilities
+
+## Frontend (`client/src`)
+*   **`main.jsx`**: Entry point. Mounts the React app to the DOM.
+*   **`App.jsx`**: Main layout and Router configuration. Filters traffic to pages.
+*   **`pages/Home.jsx`**: Landing page with features and "Get Started" CTA.
+*   **`pages/Setup.jsx`**: Configuration dashboard (Time, Difficulty, Name).
+*   **`pages/Test.jsx`**: Core game logic. Handles typing, Timer, and AI generation.
+*   **`pages/Leaderboard.jsx`**: Displays global rankings with pagination & filters.
+*   **`context/ResultContext.jsx`**: Top-level state for sharing game config and results.
+*   **`utils/gemini.js`**: Service file for communicating with Google Gemini AI.
+
+## Backend (`server/`)
+*   **`index.js`**: Express application entry point. Connects to MongoDB and defines Routes.
+*   **`models/Score.js`**: Mongoose Schema defining the structure of a Score entry (name, wpm, difficulty, etc).
+
+## Root & Config
+*   **`api/index.js`**: Serverless adapter that bridges Express to Vercel Functions.
+*   **`vercel.json`**: Deployment configuration handling routing and rewrites.
+*   **`package.json`**: Project dependencies and scripts.
+
+---
+
+
+# 1. Tech Stack Evolution
+**Requirement**: "Full Stack MERN Implementation"
+
+We evolved the project from a simple SPA to a robust Full-Stack application:
+
+*   **MongoDB**: Stores user scores, difficulties, and timestamps.
+*   **Express & Node.js**: REST API handling score submissions and leaderboard retrieval.
+*   **React**: The dynamic frontend interface.
+*   **Node.js**: The runtime environment.
+
+This allows for **Real-time Leaderboards** and **Global Competition** that purely client-side apps cannot offer.
+
+---
+
+# 2. React Components
 **Requirement**: "Clean folder structure + reusable components"
 
 We utilized a modular folder structure to separate concerns:
-*   `src/components`: Dumb/UI components (e.g., `NavBar`, `Footer`).
-*   `src/pages`: Smart/View components connected to the router.
+*   `client/src/components`: Dumb/UI components (e.g., `NavBar`, `Footer`).
+*   `client/src/pages`: Smart/View components connected to the router.
 
 **Example from `src/components/NavBar.jsx`**:
 ```jsx
@@ -66,36 +107,20 @@ const NavBar = () => {
 
 ---
 
-# 2. Props & State
+# 3. Props & State
 **Requirement**: "Props & State Management"
 
 We handle state at multiple levels:
-1.  **Local State**: `useState` for form inputs and toggles.
-2.  **Prop Drilling**: Passing data to styled components for dynamic CSS.
-
-**Example: Dynamic Styling via Props**:
-```jsx
-// Setup.jsx
-<OptionButton 
-    $active={config.difficulty === 'hard'} // Prop passed to CSS
-    onClick={() => setDifficulty('hard')}
->
-    Hard Mode
-</OptionButton>
-
-// Styled Component
-const OptionButton = styled.button`
-  background: ${props => props.$active ? '#4f46e5' : 'transparent'};
-  color: ${props => props.$active ? 'white' : 'black'};
-`;
-```
+1.  **Local State**: `useState` for form inputs (Name, Time).
+2.  **Global State**: `ResultContext` for sharing User Name and Score data across pages.
+3.  **Prop Drilling**: Passing data to styled components for dynamic CSS.
 
 ---
 
-# 3. Custom Hooks
+# 4. Custom Hooks
 **Requirement**: "Hooks (useState, useEffect, custom hooks)"
 
-We created custom hooks to encapsulate complex logic and specific behaviors.
+We created custom hooks to encapsulate complex logic.
 
 **`useTimer` Hook**:
 Abstracts the countdown logic, ensuring accurate seconds-based timing.
@@ -103,47 +128,33 @@ Abstracts the countdown logic, ensuring accurate seconds-based timing.
 // src/hooks/useTimer.js
 const useTimer = (initialTime) => {
     const [timeLeft, setTimeLeft] = useState(initialTime);
-    const [isRunning, setIsRunning] = useState(false);
-
-    useEffect(() => {
-        let interval;
-        if (isRunning && timeLeft > 0) {
-            interval = setInterval(() => setTimeLeft(t => t - 1), 1000);
-        }
-        return () => clearInterval(interval);
-    }, [isRunning, timeLeft]);
-
+    // ... logic for setInterval
     return { timeLeft, start: () => setIsRunning(true), ... };
 };
 ```
 
 ---
 
-# 4. Data Fetching (AI Integration)
+# 5. Data Fetching (AI & specific Database)
 **Requirement**: "JSON data fetching (local or API-based)"
 
-We use a **Hybrid Strategy**:
-1.  **Primary**: Fetch dynamic paragraphs from **Google Gemini API**.
-2.  **Fallback**: Use local `words.json` if the API fails or is offline.
+We use a **Dual-Fetching Strategy**:
 
-**Implementation**:
+1.  **AI Content**: Fetches dynamic paragraphs from **Google Gemini API** for the typing test.
+2.  **Leaderboard Data**: Fetches JSON data from our custom **Express Backend** (`/api/scores`).
+
+**Backend Integration (`Leaderboard.jsx`)**:
 ```javascript
-// src/utils/gemini.js
-export const generateParagraph = async (difficulty) => {
-    try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-        const result = await model.generateContent(`Generate ${difficulty} text...`);
-        return result.response.text();
-    } catch (error) {
-        console.warn("API Fail, utilizing local backup");
-        return getRandomLocalParagraph(); // Fallback logic
-    }
-}
+useEffect(() => {
+    fetch('/api/scores?difficulty=hard')
+        .then(res => res.json())
+        .then(data => setScores(data));
+}, []);
 ```
 
 ---
 
-# 5. Routing & Navigation
+# 6. Routing & Navigation
 **Requirement**: "React Router (Link, Routes, Params)"
 
 We use `react-router-dom` v6 for client-side routing.
@@ -154,105 +165,60 @@ We use `react-router-dom` v6 for client-side routing.
     <Route path="/" element={<Home />} />
     <Route path="/setup" element={<Setup />} />
     <Route path="/test" element={<Test />} />
-    {/* Wildcard 404 Route */}
-    <Route path="*" element={<Navigate to="/" />} />
+    <Route path="/leaderboard" element={<Leaderboard />} />
 </Routes>
 ```
-*   **Navigation**: We use the `useNavigate` hook to programmatically redirect users from the *Test* page to the *Results* page upon completion.
 
 ---
 
-# 6. Higher-Order Components (HOC)
-**Requirement**: "Higher-Order Components (HOC)"
+# 7. Backend Implementation
+**Requirement**: "Node.js Schema and API"
 
-We implemented HOCs for **Security and Validation**:
+We implemented a robust backend structure:
 
-1.  **`withConfigCheck`**: wraps the Test page.
-    *   *Role*: Checks if the user has actually selected a difficulty/time.
-    *   *Action*: Redirects to `/setup` if configuration is missing.
-
-2.  **`withProtection`**: wraps the Result page.
-    *   *Role*: Prevents users from manually typing `/result` without taking a test.
-    *   *Action*: Redirects to `/` if no score data exists in context.
-
-3.  **`withErrorBoundary`**: wraps logic containers (like `TestContainer`).
-    *   *Role*: Catches React render errors (e.g., API failures).
-    *   *Action*: Displays a glassmorphic fallback UI instead of a whitespace crash.
-
-4.  **`withLoading`**: wraps view components.
-    *   *Role*: Standardizes loading states (e.g., waiting for AI).
-    *   *UI*: Renders a CSS animation spinner while `isLoading` is true.
-
----
-
-# 7. Styled Components
-**Requirement**: "Styled-components or CSS modules"
-
-We utilized `styled-components` for a CSS-in-JS approach, enabling **Dynamic Theming**.
-
-**Theming Implementation**:
+**Mongoose Schema (`Score.js`)**:
 ```javascript
-// Global Theme Variables
-export const darkTheme = {
-    primary: '#6366f1',
-    background: '#0f172a',
-    text: '#f8fafc',
-    card: 'rgba(30, 41, 59, 0.7)' // Glassmorphism base
-};
+const ScoreSchema = new mongoose.Schema({
+    name: String,
+    wpm: Number,
+    accuracy: Number,
+    difficulty: String,
+    date: { type: Date, default: Date.now }
+});
+```
 
-// Usage in Component
-const Card = styled.div`
-    background: ${({ theme }) => theme.card};
-    backdrop-filter: blur(12px); // The "Glass" effect
-    border: 1px solid ${({ theme }) => theme.primary};
-`;
+**Express Route (`index.js`)**:
+```javascript
+app.post('/api/scores', async (req, res) => {
+    const newScore = new Score(req.body);
+    await newScore.save();
+    res.status(201).json(savedScore);
+});
 ```
 
 ---
 
-# 8. Context API (State Management)
-**Requirement**: "Context API"
+# 8. Deployment (Vercel)
+**Requirement**: "Production Ready"
 
-We use Context to avoid Prop Drilling across the application.
-
-**`ResultContext`**:
-*   **What it holds**: 
-    1.  Test Configuration (Duration, Difficulty).
-    2.  Live Results (WPM, Accuracy, Mistakes).
-*   **Why**: The *Setup* page sets the config, the *Test* page uses it, and the *Result* page displays the outcome. These are sibling components that need shared state.
-
-```jsx
-// src/context/ResultContext.jsx
-export const ResultProvider = ({ children }) => {
-    const [config, setConfig] = useState({ duration: 60, mode: 'medium' });
-    const [result, setResult] = useState(null);
-    
-    return (
-        <Context.Provider value={{ config, setConfig, result, setResult }}>
-            {children}
-        </Context.Provider>
-    );
-};
-```
+The project is configured for **Serverless Deployment** on Vercel.
+*   **Adapter**: `api/index.js` bridges Express to Vercel Functions.
+*   **Config**: `vercel.json` handles rewrites for API and Static assets.
+*   **Database**: Connected to **MongoDB Atlas** (Cloud).
 
 ---
 
-# 9. Local Storage (Persistence)
-**Feature**: "Leaderboard & History"
-
-To provide value without backend complexity, we persist data to the browser.
-*   **Hook**: `useLocalStorage(key, initialValue)`
-*   **Usage**: The Leaderboard component reads from `localStorage['leaderboard']`.
-*   **Privacy**: Data never leaves the user's device.
 
 ---
 
-# 🚀 Future Improvements
+# 🚀 Future Scope
 
-While feature-complete, future updates could include:
-1.  **Multiplayer Mode**: racing against friends via WebSockets.
-2.  **Custom Text Upload**: allowing users to paste their own articles.
-3.  **Account System**: utilizing Firebase/Supabase for cross-device history.
+While TypeSprint is feature-rich, we have ambitious plans:
+
+1.  **Multiplayer Racing**: Challenge friends in real-time 1v1 lobbies (Socket.io).
+2.  **User Authentication**: Save history across devices with secure login (Auth0).
+3.  **Advanced Analytics**: Visual heatmaps of your keyboard efficiency.
+4.  **Custom Texts**: Upload your own code or articles to practice.
 
 ---
 

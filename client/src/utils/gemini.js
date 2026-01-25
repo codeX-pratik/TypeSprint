@@ -22,24 +22,37 @@ export const generateParagraphWithAI = async (difficulty = 'medium') => {
     }
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+        const model = genAI.getGenerativeModel({ 
+            model: "gemini-1.5-flash",
+            generationConfig: {
+                temperature: 0.9, // High creativity to ensure variety
+                maxOutputTokens: 300,
+            }
+        });
         
+        const topics = [
+            "technology", "nature", "space", "history", "science", 
+            "future", "ocean", "forest", "city life", "AI", 
+            "ancient civilizations", "cooking", "music", "art"
+        ];
+        const randomTopic = topics[Math.floor(Math.random() * topics.length)];
+
         let prompt = "";
         switch (difficulty) {
             case 'easy':
-                prompt = "Generate a simple, easy-to-type paragraph for a typing test. About 50-70 words. Simple vocabulary. No complex punctuation.";
+                prompt = `Generate a simple paragraph about ${randomTopic} for a typing test. About 30-40 words. Simple vocabulary. No complex punctuation.`;
                 break;
             case 'hard':
-                prompt = "Generate a complex, challenging paragraph for a typing test. About 90-110 words. advanced vocabulary, technical terms, and punctuation.";
+                prompt = `Generate a complex paragraph about ${randomTopic} for a typing test. About 80-100 words. Advanced vocabulary, technical terms, and punctuation.`;
                 break;
             case 'medium':
             default:
-                prompt = "Generate a moderate paragraph for a typing test. About 70-90 words. Engaging topic, standard punctuation.";
+                prompt = `Generate a moderate paragraph about ${randomTopic} for a typing test. About 50-70 words. Engaging style, standard punctuation.`;
                 break;
         }
         
         // Add restriction to ensure plain text
-        prompt += " Output only the raw text paragraph. No markdown, no quotes wrapping the whole text.";
+        prompt += " Output only the raw text paragraph. No markdown, no quotes wrapping the whole text. Do not include the topic name as a title.";
 
         const result = await model.generateContent(prompt);
         const response = await result.response;

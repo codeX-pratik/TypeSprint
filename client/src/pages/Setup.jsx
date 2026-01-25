@@ -3,9 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useResult } from '../context/ResultContext';
 
 const Setup = () => {
-    const { testConfig, setTestConfig } = useResult();
+    const { testConfig, setTestConfig, setUserName, userName } = useResult();
     const navigate = useNavigate();
     const [description, setDescription] = React.useState('');
+    const [name, setName] = React.useState(userName || '');
+
+    React.useEffect(() => {
+        if(userName) setName(userName);
+    }, [userName]);
 
     const handleDurationChange = (d) => setTestConfig(prev => ({ ...prev, duration: parseInt(d) || 0 }));
     
@@ -42,6 +47,11 @@ const Setup = () => {
     }, [testConfig]);
 
     const startTest = () => {
+        if (!name.trim()) {
+            alert("Please enter your name to start!");
+            return;
+        }
+        setUserName(name.trim());
         navigate('/test');
     };
 
@@ -67,6 +77,26 @@ const Setup = () => {
                 </div>
 
                 <div className="config-section">
+                    <div className="config-group">
+                        <label className="config-label">Enter Name</label>
+                        <input 
+                            type="text" 
+                            className="name-input" 
+                            placeholder="Your Name..." 
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            style={{
+                                width: '100%', 
+                                padding: '12px', 
+                                borderRadius: '12px', 
+                                border: '2px solid rgba(255,255,255,0.1)', 
+                                background: 'rgba(0,0,0,0.2)',
+                                color: 'white',
+                                fontSize: '1.1rem',
+                                outline: 'none'
+                            }}
+                        />
+                    </div>
                     <div className="config-group">
                         <label className="config-label">Time (Seconds)</label>
                         <div className="setup-btn-group">

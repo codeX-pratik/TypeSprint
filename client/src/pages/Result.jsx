@@ -6,7 +6,7 @@ import withProtection from '../hoc/withProtection';
 import useLocalStorage from '../hooks/useLocalStorage';
 
 const Result = () => {
-    const { result, testConfig } = useResult();
+    const { result, testConfig, userName } = useResult();
     const navigate = useNavigate();
     const [, setLeaderboard] = useLocalStorage('leaderboard', []);
     const savedRef = useRef(false);
@@ -26,8 +26,26 @@ const Result = () => {
                 // Keep only top 50 or last 50? Let's just append.
                 return [newEntry, ...prev];
             });
+
+            // Save to Backend
+            if (userName) {
+                fetch('/api/scores', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: userName,
+                        wpm: result.wpm,
+                        accuracy: result.accuracy,
+                        difficulty: testConfig.difficulty,
+                        mode: testConfig.mode,
+                        // date: result.date // managed by backend default or pass it
+                    })
+                }).then(res => res.json())
+                  .then(data => console.log('Score saved:', data))
+                  .catch(err => console.error('Error saving score:', err));
+            }
         }
-    }, [result, testConfig, setLeaderboard]);
+    }, [result, testConfig, setLeaderboard, userName]);
 
     if (!result) return null; // Should be handled by HOC
 
@@ -62,6 +80,7 @@ const Result = () => {
 
             <div className="button-group">
                 <button className="result-btn primary" onClick={() => navigate('/test')}>Try Again</button>
+                <button className="result-btn" onClick={() => navigate('/leaderboard')}>View Leaderboard</button>
                 <button className="result-btn" onClick={() => navigate('/')}>Back to Home</button>
             </div>
         </div>
