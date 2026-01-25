@@ -40,9 +40,16 @@ const Result = () => {
                         mode: testConfig.mode,
                         // date: result.date // managed by backend default or pass it
                     })
-                }).then(res => res.json())
-                  .then(data => console.log('Score saved:', data))
-                  .catch(err => console.error('Error saving score:', err));
+                }).then(async res => {
+                    const data = await res.json();
+                    if (!res.ok) {
+                        throw new Error(data.error || 'Server returned error');
+                    }
+                    console.log('Score saved:', data);
+                }).catch(err => {
+                    console.error('Error saving score:', err);
+                    alert(`⚠️ Error saving score: ${err.message}\nPlease check your internet or Vercel Database config.`);
+                });
             }
         }
     }, [result, testConfig, setLeaderboard, userName]);
