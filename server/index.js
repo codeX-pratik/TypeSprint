@@ -47,9 +47,10 @@ app.get('/api/health', (req, res) => {
 });
 
 // Save Score
+// Save Score
 app.post('/api/scores', async (req, res) => {
-    await connectDB(); // Ensure connection for serverless
     try {
+        await connectDB(); // Ensure connection (inside try block)
         const { name, wpm, accuracy, difficulty, mode } = req.body;
         
         if (!name || wpm === undefined || accuracy === undefined) {
@@ -68,15 +69,14 @@ app.post('/api/scores', async (req, res) => {
         res.status(201).json(savedScore);
     } catch (error) {
         console.error('Error saving score:', error);
-        res.status(500).json({ error: 'Failed to save score' });
+        res.status(500).json({ error: error.message || 'Failed to save score' });
     }
 });
 
 // Get Leaderboard Routes
-// Get Leaderboard Routes
 app.get('/api/scores', async (req, res) => {
-    await connectDB();
     try {
+        await connectDB(); // Ensure connection (inside try block)
         const { page = 1, limit = 10, difficulty } = req.query;
         
         let query = {};
@@ -98,7 +98,7 @@ app.get('/api/scores', async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching scores:', error);
-        res.status(500).json({ error: 'Failed to fetch leaderboard' });
+        res.status(500).json({ error: error.message || 'Failed to fetch leaderboard' });
     }
 });
 
