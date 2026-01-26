@@ -13,16 +13,15 @@ app.use(cors());
 app.use(express.json());
 
 // Database Connection
-// Database Connection
 const connectDB = async () => {
     try {
         if (mongoose.connection.readyState === 1) return;
         
-        console.log(`🔌 Connecting to MongoDB...`);
+        console.log(` Connecting to MongoDB...`);
         await mongoose.connect(MONGODB_URI);
-        console.log('✅ MongoDB Connected Successfully');
+        console.log('MongoDB Connected Successfully');
     } catch (err) {
-        console.error('❌ MongoDB Connection Error:', err.message);
+        console.error(' MongoDB Connection Error:', err.message);
     }
 };
 
@@ -30,7 +29,7 @@ const connectDB = async () => {
 connectDB();
 
 mongoose.connection.on('error', err => {
-    console.error('❌ MongoDB Runtime Error:', err.message);
+    console.error('MongoDB Runtime Error:', err.message);
 });
 
 // Routes
@@ -97,7 +96,7 @@ app.get('/api/scores', async (req, res) => {
 // Only listen if run directly (Local Development)
 if (require.main === module) {
     app.listen(PORT, () => {
-        console.log(`🚀 Server running on http://localhost:${PORT}`);
+        console.log(` Server running on http://localhost:${PORT}`);
     });
 }
 
